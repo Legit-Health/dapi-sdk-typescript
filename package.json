@@ -1,0 +1,39 @@
+{
+  "name": "dapi-sdk-typescript",
+  "version": "0.1.0",
+  "description": "SDK for integrate with the Dermatology API of Legit.Health",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Legit-Health/dapi-sdk-typescript.git"
+  },
+  "author": "Gerardo Fernández Moreno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Legit-Health/dapi-sdk-typescript/issues"
+  },
+  "homepage": "https://github.com/Legit-Health/dapi-sdk-typescript#readme",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "axios": "^0.27.2",
+    "date-fns": "^2.29.2",
+    "eslint-config-prettier": "^8.5.0",
+    "node-fetch": "3.2.*"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.2",
+    "eslint": "^8.23.1",
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
+    "typescript": "4.8.*"
+  }
+}
