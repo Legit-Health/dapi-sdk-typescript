@@ -81,7 +81,7 @@ describe('Test predict requests', () => {
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
-
+        
     expect(response.modality).to.not.be.null;
 
     const mediaValidity = response.mediaValidity;

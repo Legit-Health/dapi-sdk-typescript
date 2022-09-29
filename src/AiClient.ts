@@ -3,7 +3,7 @@ import AiResponse from './AiResponse';
 import FollowUpArguments from './MediaAnalyzerArguments/FollowUpArguments';
 import MediaAnalyzerArguments from './MediaAnalyzerArguments/MediaAnalyzerArguments';
 import PredictArguments from './MediaAnalyzerArguments/PredictArguments';
-import MediaAnalyzerError, {ErrorCode} from './MediaAnalyzerError';
+import MediaAnalyzerError from './MediaAnalyzerError';
 
 export default class AiClient {
   constructor(private readonly baseUri: string, private readonly analyzerApiKey: string) {}
@@ -28,14 +28,13 @@ export default class AiClient {
         }
       );
       if (response.status !== 200) {
-        throw new MediaAnalyzerError('Invalid response', ErrorCode.Request, response.status);
+        throw new MediaAnalyzerError('Invalid response', response.status);
       }
       const json = response.data;
       return json;
     } catch (error) {
       throw new MediaAnalyzerError(
-        error instanceof Error ? error.message : 'Unknown error.',
-        ErrorCode.AiClient
+        error instanceof Error ? error.message : 'Unknown error.'
       );
     }
   }
