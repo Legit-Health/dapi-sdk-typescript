@@ -2,25 +2,27 @@ import path from 'path';
 import {expect} from 'chai';
 import {readFileSync} from 'fs';
 import dotenv from 'dotenv';
-import generateRandomString from './generateRandomString';
-import MediaAnalyzer from '../lib/MediaAnalyzer';
-import AscoradLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/AscoradLocalQuestionnaire';
-import ApasiLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/ApasiLocalQuestionnaire';
-import PasiLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/PasiLocalQuestionnaire';
-import AuasLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/AuasLocalQuestionnaire';
-import UasLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/UasLocalQuestionnaire';
-import Ihs4LocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/Ihs4LocalQuestionnaire';
-import Pure4Questionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/Pure4Questionnaire';
-import DlqiQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/DlqiQuestionnaire';
-import Questionnaires from '../lib/MediaAnalyzerArguments/Questionnaires/Questionnaires';
-import BodySiteCode from '../lib/MediaAnalyzerArguments/BodySite/BodySiteCode';
-import Operator from '../lib/MediaAnalyzerArguments/Operator/Operator';
-import Subject from '../lib/MediaAnalyzerArguments/Subject/Subject';
-import Gender from '../lib/MediaAnalyzerArguments/Subject/Gender';
-import Company from '../lib/MediaAnalyzerArguments/Subject/Company';
-import FollowUpArguments from '../lib/MediaAnalyzerArguments/FollowUpArguments';
-import PreviousMedia from '../lib/MediaAnalyzerArguments/PreviousMedia/PreviousMedia';
 import {subMonths} from 'date-fns';
+import generateRandomString from './generateRandomString';
+import {
+  AscoradLocalQuestionnaire,
+  ApasiLocalQuestionnaire,
+  PasiLocalQuestionnaire,
+  AuasLocalQuestionnaire,
+  UasLocalQuestionnaire,
+  Ihs4LocalQuestionnaire,
+  Pure4Questionnaire,
+  DlqiQuestionnaire,
+  Questionnaires,
+  BodySiteCode,
+  Operator,
+  Subject,
+  Gender,
+  Company,
+  FollowUpArguments,
+  PreviousMedia,
+  MediaAnalyzer
+} from '../index';
 
 const env = dotenv.config({path: '.env.local'});
 

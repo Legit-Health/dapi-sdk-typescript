@@ -3,13 +3,15 @@ import {expect} from 'chai';
 import {readFileSync} from 'fs';
 import dotenv from 'dotenv';
 import generateRandomString from './generateRandomString';
-import MediaAnalyzer from '../lib/MediaAnalyzer';
-import PredictArguments from '../lib/MediaAnalyzerArguments/PredictArguments';
-import BodySiteCode from '../lib/MediaAnalyzerArguments/BodySite/BodySiteCode';
-import Operator from '../lib/MediaAnalyzerArguments/Operator/Operator';
-import Subject from '../lib/MediaAnalyzerArguments/Subject/Subject';
-import Gender from '../lib/MediaAnalyzerArguments/Subject/Gender';
-import Company from '../lib/MediaAnalyzerArguments/Subject/Company';
+import {
+  MediaAnalyzer,
+  BodySiteCode,
+  Operator,
+  Subject,
+  Gender,
+  Company,
+  PredictArguments
+} from '../index';
 
 const env = dotenv.config({path: '.env.local'});
 
