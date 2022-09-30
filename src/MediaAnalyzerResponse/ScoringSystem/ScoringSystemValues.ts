@@ -22,6 +22,7 @@ export default class ScoringSystemValues {
 
   constructor(readonly scoringSystemCode: string, private values: Values) {
     const calculatedValue = this.values.grade?.float ?? null;
+    
     this.score = new ScoringSystemScore(
       this.values.grade?.category ?? null,
       calculatedValue === null ? null : parseFloat(calculatedValue),
