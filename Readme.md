@@ -1,6 +1,6 @@
-# JavaScript / TypeScript SDK for integrate with the Dermatology API offered by Legit.Health
+# JavaScript/TypeScript SDK for Legit.Health Dermatology API
 
-Official SDK for integrate with the Dermatology API offered by Legit.Health 🩺🤖
+Official SDK for integrating the Dermatology API offered by Legit.Health 🩺🤖
 
 ## Instructions
 
@@ -22,12 +22,12 @@ The `predict` method of our `MediaAnalyzer` class receives one argument of the c
 ```js
 
 import MediaAnalyzer from '@legit.health/dapi-sdk/MediaAnalyzer';
-import PredictArguments from '@legit.health/dapi-sdk/MediaAnalyzerArguments/PredictArguments';
-import BodySiteCode from '@legit.health/dapi-sdk/MediaAnalyzerArguments/BodySite/BodySiteCode';
-import Operator from '@legit.health/dapi-sdk/MediaAnalyzerArguments/Operator/Operator';
-import Subject from '@legit.health/dapi-sdk/MediaAnalyzerArguments/Subject/Subject';
-import Gender from '@legit.health/dapi-sdk/MediaAnalyzerArguments/Subject/Gender';
-import Company from '@legit.health/dapi-sdk/MediaAnalyzerArguments/Subject/Company';
+import PredictArguments from '@legit.health/dapi-sdk/PredictArguments';
+import BodySiteCode from '@legit.health/dapi-sdk/BodySiteCode';
+import Operator from '@legit.health/dapi-sdk/Operator';
+import Subject from '@legit.health/dapi-sdk/Subject';
+import Gender from '@legit.health/dapi-sdk/Gender';
+import Company from '@legit.health/dapi-sdk/Company';
 
 const predictArguments = new PredictArguments(
     'requestId',
@@ -55,7 +55,7 @@ const response = await mediaAnalyzer.predict(predictArguments);
 
 The response object contains several properties with the information returned by the API about the analyzed image:
 
-- `preliminaryFindings` is an object of the class `@legit.health/dapi-sdk/MediaAnalyzerResponse/PreliminaryFindingsValue` with the probability of the different suspicions that the algorithm has about the image. 
+- `preliminaryFindings` is an object of the class `@legit.health/dapi-sdk/PreliminaryFindingsValue` with the probability of the different suspicions that the algorithm has about the image. 
 
 - `modality` is the modality of the image detected. 
 
@@ -63,7 +63,7 @@ The response object contains several properties with the information returned by
 
 - `metricsValue` contains the sensitivity and specificity values. 
 
-- `conclusions` is an array of `@legit.health/dapi-sdk/MediaAnalyzerResponse/Conclusion/Conclusion` objects with the detected pathologies and its probability. The total probability is distributed among each of the pathologies detected.
+- `conclusions` is an array of `@legit.health/dapi-sdk/Conclusion` objects with the detected pathologies and its probability. The total probability is distributed among each of the pathologies detected.
 
 - `iaSeconds` is the time spent by the algorithms analyzying the image.
 
@@ -78,11 +78,11 @@ Let's see how to send a follow-up request for a patient diagnosed with psoriasis
 Firstly, we will create the different objects that represents the questionnaires used to track the evolution of psoriasis:
 
 ```ts
-import ApasiLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/ApasiLocalQuestionnaire';
-import PasiLocalQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/PasiLocalQuestionnaire';
-import Pure4Questionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/Pure4Questionnaire';
-import DlqiQuestionnaire from '../lib/MediaAnalyzerArguments/Questionnaires/DlqiQuestionnaire';
-import Questionnaires from '../lib/MediaAnalyzerArguments/Questionnaires/Questionnaires';
+import ApasiLocalQuestionnaire from '@legit.health/dapi-sdk/ApasiLocalQuestionnaire';
+import PasiLocalQuestionnaire from '@legit.health/dapi-sdk/PasiLocalQuestionnaire';
+import Pure4Questionnaire from '@legit.health/dapi-sdk/Pure4Questionnaire';
+import DlqiQuestionnaire from '@legit.health/dapi-sdk/DlqiQuestionnaire';
+import Questionnaires from '@legit.health/dapi-sdk/Questionnaires';
 
 // ...
 
@@ -93,11 +93,11 @@ const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
 const questionnaires = new Questionnaires([apasiLocal, pasiLocal, pure4, dlqi]);
 ```
 
-Then, we will create an object of the class `@legit.health/dapi-sdk/MediaAnalyzerArguments/FollowUpArguments`:
+Then, we will create an object of the class `@legit.health/dapi-sdk/FollowUpArguments`:
 
 ```ts
 // ...
-import FollowUpArguments from '../lib/MediaAnalyzerArguments/FollowUpArguments';
+import FollowUpArguments from '@legit.health/dapi-sdk/FollowUpArguments';
 
 // ...
 const previousMedias = [new PreviousMedia(previousImage, previousImageDate)];
@@ -134,7 +134,7 @@ Unlike diagnostic support requests, follow-up requests supports the following ad
 [ ASCORAD_LOCAL, APASI_LOCAL, AUAS_LOCAL, AIHS4_LOCAL, DLQI, SCOVID, ALEGI, PURE4, UCT, AUAS7, APULSI, SCORAD_LOCAL, PASI_LOCAL, UAS_LOCAL, IHS4_LOCAL]
 ```
 
-- `questionnaires` is an object of the class `@legit.health/dapi-sdk/MediaAnalyzerArguments/Questionnaires/Questionnaires` with the values of the scoring systems to be evaluated.
+- `questionnaires` is an object of the class `@legit.health/dapi-sdkQuestionnaires` with the values of the scoring systems to be evaluated.
 
 Once you've created a `FollowUpArguments` object, you can send the request in this way:
 
@@ -145,7 +145,7 @@ const response = await mediaAnalyzer.followUp(followUpArguments);
 
 The response object contains several properties with the information returned by the API about the analyzed image:
 
-- `preliminaryFindings` is an object of the class `@legit.health/dapi-sdk/MediaAnalyzerResponse/PreliminaryFindingsValue` with the probability of the different suspicions that the algorithm has about the image.
+- `preliminaryFindings` is an object of the class `@legit.health/dapi-sdk/PreliminaryFindingsValue` with the probability of the different suspicions that the algorithm has about the image.
 
 - `modality` is the modality of the image detected.
 
@@ -159,7 +159,7 @@ Besides, it contains two extra properties:
 
 - `explainabilityMedia`, with the image containing the surface of the injury detected by our AI algorithms.
 
-- `scoringSystemsValues`, an object of the class `@legit.health/dapi-sdk/MediaAnalyzerResponse/ScoringSystem/ScoringSystemValues` with the values calculated for each scoring system included in the array `scoringSystems` of the arguments.
+- `scoringSystemsValues`, an object of the class `@legit.health/dapi-sdk/ScoringSystemValues` with the values calculated for each scoring system included in the array `scoringSystems` of the arguments.
 
 #### The `ScoringSystemValues` object
 
@@ -171,7 +171,7 @@ You can access to the value of one scoring system using the method `getScoringSy
 const apasiLocalScoringSystemValue = response.getScoringSystemValues('APASI_LOCAL');
 ```
 
-Once you have one object of the class `ScoringSystemValues`, you can permform the following actions:
+Once you have one object of the class `ScoringSystemValues`, you can perform the following actions:
 
 - Access to the value of each facet using the method `getFacetCalculatedValue(facetCode: string): ScoringSystemFacetCalculatedValue`.
 
