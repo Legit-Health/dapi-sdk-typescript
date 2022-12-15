@@ -10,6 +10,7 @@ export function createFromJson(json: AiResponse): MediaAnalyzerResponse {
   const preliminaryFindings = new PreliminaryFindingsValue(
     json.preliminaryFindings.hasConditionSuspicion,
     json.preliminaryFindings.isPreMalignantSuspicion,
+    json.preliminaryFindings.isMalignantSuspicion ?? null,
     json.preliminaryFindings.needsBiopsySuspicion,
     json.preliminaryFindings.needsSpecialistsAttention
   );

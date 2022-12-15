@@ -26,6 +26,7 @@ describe('Test predict requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 
@@ -81,6 +82,7 @@ describe('Test predict requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
         
@@ -122,6 +124,7 @@ describe('Test predict requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).equals(null);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 

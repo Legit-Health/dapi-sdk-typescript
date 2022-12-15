@@ -66,6 +66,7 @@ describe('Test followup requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 
@@ -185,6 +186,7 @@ describe('Test followup requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 
@@ -274,6 +276,7 @@ describe('Test followup requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 
@@ -368,6 +371,7 @@ describe('Test followup requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 
@@ -496,6 +500,7 @@ describe('Test followup requests', () => {
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
 

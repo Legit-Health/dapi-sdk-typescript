@@ -12,6 +12,7 @@ export default interface AiResponse {
   preliminaryFindings: {
     hasConditionSuspicion: number;
     isPreMalignantSuspicion: number;
+    isMalignantSuspicion: number | null;
     needsBiopsySuspicion: number;
     needsSpecialistsAttention: number;
   };
