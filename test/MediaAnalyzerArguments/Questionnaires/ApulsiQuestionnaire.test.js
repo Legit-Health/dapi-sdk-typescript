@@ -73,9 +73,9 @@ describe('Test ApulsiQuestionnaire', () => {
     const json = apulsiQuestionnaire.asObject();
 
     expect(Object.keys(json)).to.have.lengthOf(3);
-    expect(json.erythema_surface).to.be.equals(2);
-    expect(json.pain_apusa).to.be.equals(1);
-    expect(json.odor_apusa).to.be.equals(0);
+    expect(json.erythemaSurface).to.be.equals(2);
+    expect(json.painApusa).to.be.equals(1);
+    expect(json.odorApusa).to.be.equals(0);
   });
 
   it('should return the right name', function () {

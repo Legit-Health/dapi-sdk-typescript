@@ -18,7 +18,7 @@ export default class PasiLocalQuestionnaire extends Questionnaire {
     return 'PASI_LOCAL';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       surface: this.surface,
       erythema: this.erythema,

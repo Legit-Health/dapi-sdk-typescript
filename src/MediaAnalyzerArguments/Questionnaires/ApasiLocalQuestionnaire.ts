@@ -10,7 +10,7 @@ export default class ApasiLocalQuestionnaire extends Questionnaire {
     return 'APASI_LOCAL';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       surface: this.surface
     };

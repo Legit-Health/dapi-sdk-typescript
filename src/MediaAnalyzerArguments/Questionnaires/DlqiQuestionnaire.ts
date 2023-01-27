@@ -30,7 +30,7 @@ export default class DlqiQuestionnaire extends Questionnaire {
     return 'DLQI';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       question1: this.question1,
       question2: this.question2,

@@ -81,8 +81,8 @@ describe('Test AscoradLocalQuestionnaire', () => {
     const json = ascoradLocalQuestionnaire.asObject();
 
     expect(Object.keys(json)).to.have.lengthOf(3);
-    expect(json.surface_value).to.be.equals(27);
-    expect(json.itchiness_scorad).to.be.equals(2);
+    expect(json.surfaceValue).to.be.equals(27);
+    expect(json.itchinessScorad).to.be.equals(2);
     expect(json.sleeplessness).to.be.equals(1);
   });
 

@@ -24,7 +24,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(101, 3, 3, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`surface_value should be between 0 and 100`);
+      expect(error.message).to.be.equals(`surfaceValue should be between 0 and 100`);
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -33,7 +33,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(-1, 3, 3, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`surface_value should be between 0 and 100`);
+      expect(error.message).to.be.equals(`surfaceValue should be between 0 and 100`);
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -150,7 +150,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 1, 11, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`itchiness_scorad should be between 0 and 10`);
+      expect(error.message).to.be.equals(`itchinessScorad should be between 0 and 10`);
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -159,7 +159,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 1, -1, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`itchiness_scorad should be between 0 and 10`);
+      expect(error.message).to.be.equals(`itchinessScorad should be between 0 and 10`);
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -187,14 +187,14 @@ describe('Test ScoradLocalQuestionnaire', () => {
     const json = scoradLocalQuestionnaire.asObject();
 
     expect(Object.keys(json)).to.have.lengthOf(9);
-    expect(json.surface_value).to.be.equals(25);
+    expect(json.surfaceValue).to.be.equals(25);
     expect(json.lichenification).to.be.equals(0);
     expect(json.sleeplessness).to.be.equals(6);
     expect(json.erythema).to.be.equals(0);
     expect(json.swelling).to.be.equals(1);
     expect(json.crusting).to.be.equals(2);
     expect(json.excoriation).to.be.equals(3);
-    expect(json.itchiness_scorad).to.be.equals(5);
+    expect(json.itchinessScorad).to.be.equals(5);
     expect(json.dryness).to.be.equals(1);
   });
 

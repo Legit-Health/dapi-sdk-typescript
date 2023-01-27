@@ -15,9 +15,19 @@ import {
 
 const env = dotenv.config({path: '.env.local'});
 
+const apiUrl = env.parsed?.API_URL;
+if (!apiUrl) {
+  throw new Error('API_URL is not defined in .env.local file');
+}
+
+const apiKey = env.parsed?.API_KEY;
+if (!apiKey) {
+  throw new Error('API_KEY is not defined in .env.local file');
+}
+
 describe('Test predict requests', () => {
   it('should send a base predict request', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/acne.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -46,7 +56,7 @@ describe('Test predict requests', () => {
 
     expect(response.explainabilityMedia).to.be.null;
 
-    expect(response.scoringSystemsValues).to.be.empty;
+    expect(response.scoringSystemsResults).to.be.empty;
 
     expect(response.conclusions).to.be.not.empty;
     const firstConclusion = response.conclusions[0];
@@ -59,7 +69,7 @@ describe('Test predict requests', () => {
   });
 
   it('should send a predict request', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/acne.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -85,7 +95,7 @@ describe('Test predict requests', () => {
     expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
-        
+
     expect(response.modality).to.not.be.null;
 
     const mediaValidity = response.mediaValidity;
@@ -102,7 +112,7 @@ describe('Test predict requests', () => {
 
     expect(response.explainabilityMedia).to.be.null;
 
-    expect(response.scoringSystemsValues).to.be.empty;
+    expect(response.scoringSystemsResults).to.be.empty;
 
     expect(response.conclusions).to.be.not.empty;
     const firstConclusion = response.conclusions[0];
@@ -115,7 +125,7 @@ describe('Test predict requests', () => {
   });
 
   it('should send a base predict request with invalid image', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/invalid.png');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -147,7 +157,7 @@ describe('Test predict requests', () => {
 
     expect(response.explainabilityMedia).to.be.null;
 
-    expect(response.scoringSystemsValues).to.be.empty;
+    expect(response.scoringSystemsResults).to.be.empty;
 
     expect(response.iaSeconds).greaterThan(0);
   });

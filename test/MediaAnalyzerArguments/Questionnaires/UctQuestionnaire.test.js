@@ -114,10 +114,10 @@ describe('Test ScovidQuestionnaire', () => {
 
     expect(Object.keys(json)).to.have.lengthOf(4);
 
-    expect(json.question1_uct).to.be.equals(1);
-    expect(json.question2_uct).to.be.equals(2);
-    expect(json.question3_uct).to.be.equals(0);
-    expect(json.question4_uct).to.be.equals(4);
+    expect(json.question1Uct).to.be.equals(1);
+    expect(json.question2Uct).to.be.equals(2);
+    expect(json.question3Uct).to.be.equals(0);
+    expect(json.question4Uct).to.be.equals(4);
   });
 
   it('should return the right name', function () {

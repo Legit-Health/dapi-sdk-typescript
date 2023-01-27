@@ -29,7 +29,7 @@ describe('Test Pure4Questionnaire', () => {
         new Pure4Questionnaire(...arr);
       } catch (error) {
         exceptionIsThrown = true;
-        expect(error.message).to.be.equals(`question${i + 1}_pure should be between 0 and 1`);
+        expect(error.message).to.be.equals(`question${i + 1}Pure should be between 0 and 1`);
       }
       expect(exceptionIsThrown).to.be.true;
     }
@@ -44,7 +44,7 @@ describe('Test Pure4Questionnaire', () => {
         new Pure4Questionnaire(...arr);
       } catch (error) {
         exceptionIsThrown = true;
-        expect(error.message).to.be.equals(`question${i + 1}_pure should be between 0 and 1`);
+        expect(error.message).to.be.equals(`question${i + 1}Pure should be between 0 and 1`);
       }
       expect(exceptionIsThrown).to.be.true;
     }
@@ -55,10 +55,10 @@ describe('Test Pure4Questionnaire', () => {
     const json = pure4Questionnaire.asObject();
 
     expect(Object.keys(json)).to.have.lengthOf(4);
-    expect(json.question1_pure).to.be.equals(0);
-    expect(json.question2_pure).to.be.equals(1);
-    expect(json.question3_pure).to.be.equals(0);
-    expect(json.question4_pure).to.be.equals(1);
+    expect(json.question1Pure).to.be.equals(0);
+    expect(json.question2Pure).to.be.equals(1);
+    expect(json.question3Pure).to.be.equals(0);
+    expect(json.question4Pure).to.be.equals(1);
   });
 
   it('should return the right name', function () {

@@ -3,7 +3,7 @@ import Questionnaire from './Questionnaire';
 export default class ScovidQuestionnaire extends Questionnaire {
   constructor(
     public readonly pain: number,
-    public readonly itchiness_scorad: number,
+    public readonly itchinessScorad: number,
     public readonly fever: number,
     public readonly cough: number,
     public readonly cephalea: number,
@@ -15,7 +15,7 @@ export default class ScovidQuestionnaire extends Questionnaire {
   ) {
     super();
     this.ensureIsInRange(pain, 0, 10, 'pain');
-    this.ensureIsInRange(itchiness_scorad, 0, 10, 'itchiness_scorad');
+    this.ensureIsInRange(itchinessScorad, 0, 10, 'itchinessScorad');
     this.ensureIsInRange(fever, 0, 3, 'fever');
     this.ensureIsInRange(cough, 0, 3, 'cough');
     this.ensureIsInRange(cephalea, 0, 3, 'cephalea');
@@ -30,10 +30,10 @@ export default class ScovidQuestionnaire extends Questionnaire {
     return 'SCOVID';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       pain: this.pain,
-      itchiness_scorad: this.itchiness_scorad,
+      itchinessScorad: this.itchinessScorad,
       fever: this.fever,
       cough: this.cough,
       cephalea: this.cephalea,

@@ -59,7 +59,7 @@ describe('Test ScovidQuestionnaire', () => {
     expect(Object.keys(json)).to.have.lengthOf(10);
 
     expect(json.pain).to.be.equals(8);
-    expect(json.itchiness_scorad).to.be.equals(10);
+    expect(json.itchinessScorad).to.be.equals(10);
     expect(json.fever).to.be.equals(0);
     expect(json.cough).to.be.equals(1);
     expect(json.cephalea).to.be.equals(2);

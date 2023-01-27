@@ -2,13 +2,13 @@ import Questionnaire from './Questionnaire';
 
 export default class AscoradLocalQuestionnaire extends Questionnaire {
   constructor(
-    public readonly surface_value: number,
-    public readonly itchiness_scorad: number,
+    public readonly surfaceValue: number,
+    public readonly itchinessScorad: number,
     public readonly sleeplessness: number
   ) {
     super();
-    this.ensureIsInRange(surface_value, 0, 100, 'surface_value');
-    this.ensureIsInRange(itchiness_scorad, 0, 10, 'itchiness_scorad');
+    this.ensureIsInRange(surfaceValue, 0, 100, 'surfaceValue');
+    this.ensureIsInRange(itchinessScorad, 0, 10, 'itchinessScorad');
     this.ensureIsInRange(sleeplessness, 0, 10, 'sleeplessness');
   }
 
@@ -16,10 +16,10 @@ export default class AscoradLocalQuestionnaire extends Questionnaire {
     return 'ASCORAD_LOCAL';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
-      itchiness_scorad: this.itchiness_scorad,
-      surface_value: this.surface_value,
+      itchinessScorad: this.itchinessScorad,
+      surfaceValue: this.surfaceValue,
       sleeplessness: this.sleeplessness
     };
   }

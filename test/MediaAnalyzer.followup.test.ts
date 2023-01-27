@@ -26,9 +26,19 @@ import {
 
 const env = dotenv.config({path: '.env.local'});
 
+const apiUrl = env.parsed?.API_URL;
+if (!apiUrl) {
+  throw new Error('API_URL is not defined in .env.local file');
+}
+
+const apiKey = env.parsed?.API_KEY;
+if (!apiKey) {
+  throw new Error('API_KEY is not defined in .env.local file');
+}
+
 describe('Test followup requests', () => {
   it('should work with psoriasis followup', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/psoriasis_02.png');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -88,70 +98,78 @@ describe('Test followup requests', () => {
 
     expect(response.iaSeconds).greaterThan(0);
 
-    expect(response.scoringSystemsValues).to.have.lengthOf(4);
+    expect(response.scoringSystemsResults).to.have.lengthOf(4);
 
     // APASI
-    const apasiLocalScoringSystemValue = response.getScoringSystemValues('APASI_LOCAL');
-    expect(apasiLocalScoringSystemValue.getScore().calculatedScore).greaterThanOrEqual(0);
-    expect(apasiLocalScoringSystemValue.getScore().category).to.not.be.null;
+    const apasiLocalResult = response.getScoringSystemResult('APASI_LOCAL');
+    expect(apasiLocalResult).to.not.be.null;
+    if (apasiLocalResult) {
+      expect(apasiLocalResult.getScore().score).greaterThanOrEqual(0);
+      expect(apasiLocalResult.getScore().category).to.not.be.null;
 
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('desquamation').intensity).to.not.be
-      .null;
-    expect(
-      apasiLocalScoringSystemValue.getFacetCalculatedValue('desquamation').intensity
-    ).to.be.within(0, 100);
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('desquamation').value).to.be.within(
-      0,
-      4
-    );
+      expect(apasiLocalResult.getFacetScore('desquamation').intensity).to.not.be.null;
+      expect(apasiLocalResult.getFacetScore('desquamation').intensity).to.be.within(0, 100);
+      expect(apasiLocalResult.getFacetScore('desquamation').value).to.be.within(0, 4);
 
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('erythema').intensity).to.not.be
-      .null;
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('erythema').intensity).to.be.within(
-      0,
-      100
-    );
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('erythema').value).to.be.within(
-      0,
-      4
-    );
+      expect(apasiLocalResult.getFacetScore('erythema').intensity).to.not.be.null;
+      expect(apasiLocalResult.getFacetScore('erythema').intensity).to.be.within(0, 100);
+      expect(apasiLocalResult.getFacetScore('erythema').value).to.be.within(0, 4);
 
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('induration').intensity).to.not.be
-      .null;
-    expect(
-      apasiLocalScoringSystemValue.getFacetCalculatedValue('induration').intensity
-    ).to.be.within(0, 100);
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('induration').value).to.be.within(
-      0,
-      4
-    );
+      expect(apasiLocalResult.getFacetScore('induration').intensity).to.not.be.null;
+      expect(apasiLocalResult.getFacetScore('induration').intensity).to.be.within(0, 100);
+      expect(apasiLocalResult.getFacetScore('induration').value).to.be.within(0, 4);
 
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('surface').intensity).to.not.be
-      .null;
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('surface').intensity).to.be.within(
-      0,
-      100
-    );
-    expect(apasiLocalScoringSystemValue.getFacetCalculatedValue('surface').value).to.be.within(
-      0,
-      6
-    );
+      expect(apasiLocalResult.getFacetScore('surface').intensity).to.not.be.null;
+      expect(apasiLocalResult.getFacetScore('surface').intensity).to.be.within(0, 100);
+      expect(apasiLocalResult.getFacetScore('surface').value).to.be.within(0, 6);
+    }
 
     // DLQI
-    const dlqiScoringSystemValue = response.getScoringSystemValues('DLQI');
-    expect(dlqiScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const dlqiResult = response.getScoringSystemResult('DLQI');
+    expect(dlqiResult).to.not.be.null;
+    if (dlqiResult) {
+      expect(dlqiResult.getScore().score).greaterThanOrEqual(0);
+      expect(dlqiResult.getScore().category).to.not.be.null;
+      for (let i = 1; i <= 10; i++) {
+        const facetCode = `question${i}`;
+        const facetScore = dlqiResult.getFacetScore(facetCode);
+        expect(facetScore.intensity).to.be.null;
+        expect(facetScore.value).to.be.within(0, 3);
+      }
+    }
 
     // PURE4
-    const pure4ScoringSystemValue = response.getScoringSystemValues('PURE4');
-    expect(pure4ScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const pure4Result = response.getScoringSystemResult('PURE4');
+    expect(pure4Result).to.not.be.null;
+    if (pure4Result) {
+      expect(pure4Result.getScore().score).greaterThanOrEqual(0);
+      expect(pure4Result.getScore().category).to.not.be.null;
+      for (let i = 1; i <= 4; i++) {
+        const facetCode = `question${i}Pure`;
+        const facetScore = pure4Result.getFacetScore(facetCode);
+        expect(facetScore.intensity).to.be.null;
+        expect(facetScore.value).to.be.within(0, 3);
+      }
+    }
 
     // PASI_LOCAL
-    const pasiScoringSystemValue = response.getScoringSystemValues('PASI_LOCAL');
-    expect(pasiScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const pasiResult = response.getScoringSystemResult('PASI_LOCAL');
+    expect(pasiResult).to.not.be.null;
+    if (pasiResult) {
+      expect(pasiResult.getScore().category).to.not.be.null;
+      expect(pasiResult.getFacetScore('desquamation').intensity).to.be.null;
+      expect(pasiResult.getFacetScore('desquamation').value).to.be.within(0, 4);
+      expect(pasiResult.getFacetScore('erythema').intensity).to.be.null;
+      expect(pasiResult.getFacetScore('erythema').value).to.be.within(0, 4);
+      expect(pasiResult.getFacetScore('induration').intensity).to.be.null;
+      expect(pasiResult.getFacetScore('induration').value).to.be.within(0, 4);
+      expect(pasiResult.getFacetScore('surface').intensity).to.be.null;
+      expect(pasiResult.getFacetScore('surface').value).to.be.within(0, 6);
+    }
   });
 
   it('should work with acne followup', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/acne.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -208,38 +226,44 @@ describe('Test followup requests', () => {
 
     expect(response.iaSeconds).greaterThan(0);
 
-    expect(response.scoringSystemsValues).to.have.lengthOf(2);
+    expect(response.scoringSystemsResults).to.have.lengthOf(2);
 
     // ALEGI
-    const alegiLocalScoringSystemValue = response.getScoringSystemValues('ALEGI');
-    expect(alegiLocalScoringSystemValue.getScore().calculatedScore).greaterThanOrEqual(0);
-    expect(alegiLocalScoringSystemValue.getScore().category).to.not.be.null;
-
-    expect(alegiLocalScoringSystemValue.getFacetCalculatedValue('lesionDensity').intensity).to.not
-      .be.null;
-    expect(
-      alegiLocalScoringSystemValue.getFacetCalculatedValue('lesionDensity').intensity
-    ).to.be.within(0, 100);
-    expect(
-      alegiLocalScoringSystemValue.getFacetCalculatedValue('lesionDensity').value
-    ).to.be.within(0, 4);
-
-    expect(alegiLocalScoringSystemValue.getFacetCalculatedValue('lesionNumber').intensity).to.not.be
-      .null;
-    expect(
-      alegiLocalScoringSystemValue.getFacetCalculatedValue('lesionNumber').intensity
-    ).to.be.within(0, 100);
-    expect(alegiLocalScoringSystemValue.getFacetCalculatedValue('lesionNumber').value).greaterThan(
-      0
-    );
+    const alegiResult = response.getScoringSystemResult('ALEGI');
+    expect(alegiResult).to.not.be.null;
+    if (alegiResult) {
+      expect(alegiResult.getScore().score).greaterThanOrEqual(0);
+      expect(alegiResult.getScore().category).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionDensity').intensity).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionDensity').intensity).greaterThanOrEqual(0);
+      expect(alegiResult.getFacetScore('lesionDensity').intensity).lessThanOrEqual(100);
+      expect(alegiResult.getFacetScore('lesionDensity').value).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionDensity').value).greaterThanOrEqual(0);
+      expect(alegiResult.getFacetScore('lesionDensity').value).lessThanOrEqual(4);
+      expect(alegiResult.getFacetScore('lesionNumber').intensity).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionNumber').intensity).greaterThanOrEqual(0);
+      expect(alegiResult.getFacetScore('lesionNumber').intensity).lessThanOrEqual(100);
+      expect(alegiResult.getFacetScore('lesionNumber').value).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionNumber').value).greaterThan(0);
+    }
 
     // DLQI
-    const dlqiScoringSystemValue = response.getScoringSystemValues('DLQI');
-    expect(dlqiScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const dlqiResult = response.getScoringSystemResult('DLQI');
+    expect(dlqiResult).to.not.be.null;
+    if (dlqiResult) {
+      expect(dlqiResult.getScore().score).greaterThanOrEqual(0);
+      expect(dlqiResult.getScore().category).to.not.be.null;
+      for (let i = 1; i <= 10; i++) {
+        const facetCode = `question${i}`;
+        const facetScore = dlqiResult.getFacetScore(facetCode);
+        expect(facetScore.intensity).to.be.null;
+        expect(facetScore.value).to.be.within(0, 3);
+      }
+    }
   });
 
   it('should work with urticaria followup', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/urticaria.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -298,44 +322,50 @@ describe('Test followup requests', () => {
 
     expect(response.iaSeconds).greaterThan(0);
 
-    expect(response.scoringSystemsValues).to.have.lengthOf(3);
+    expect(response.scoringSystemsResults).to.have.lengthOf(3);
 
     //AUAS_LOCAL
-    const auasLocalScoringSystemValue = response.getScoringSystemValues('AUAS_LOCAL');
-    expect(auasLocalScoringSystemValue.getScore().calculatedScore).greaterThanOrEqual(0);
-    expect(auasLocalScoringSystemValue.getScore().category).to.not.be.null;
-
-    expect(auasLocalScoringSystemValue.getFacetCalculatedValue('hiveNumber').intensity).to.not.be
-      .null;
-    expect(
-      auasLocalScoringSystemValue.getFacetCalculatedValue('hiveNumber').intensity
-    ).greaterThanOrEqual(0);
-    expect(
-      auasLocalScoringSystemValue.getFacetCalculatedValue('hiveNumber').value
-    ).greaterThanOrEqual(0);
-
-    expect(auasLocalScoringSystemValue.getFacetCalculatedValue('itchiness').intensity).to.not.be
-      .null;
-    expect(auasLocalScoringSystemValue.getFacetCalculatedValue('itchiness').intensity).to.be.within(
-      0,
-      100
-    );
-    expect(auasLocalScoringSystemValue.getFacetCalculatedValue('itchiness').value).to.be.within(
-      0,
-      3
-    );
+    const auasLocalResult = response.getScoringSystemResult('AUAS_LOCAL');
+    expect(auasLocalResult).to.not.be.null;
+    if (auasLocalResult) {
+      expect(auasLocalResult.getScore().score).greaterThanOrEqual(0);
+      expect(auasLocalResult.getScore().category).to.not.be.null;
+      expect(auasLocalResult.getFacetScore('hiveNumber').intensity).to.not.be.null;
+      expect(auasLocalResult.getFacetScore('hiveNumber').value).greaterThanOrEqual(0);
+      expect(auasLocalResult.getFacetScore('hiveNumber').intensity).greaterThanOrEqual(0);
+      expect(auasLocalResult.getFacetScore('itchiness').intensity).to.be.null;
+      expect(auasLocalResult.getFacetScore('itchiness').value).to.be.within(0, 3);
+    }
 
     // DLQI
-    const dlqiScoringSystemValue = response.getScoringSystemValues('DLQI');
-    expect(dlqiScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const dlqiResult = response.getScoringSystemResult('DLQI');
+    expect(dlqiResult).to.not.be.null;
+    if (dlqiResult) {
+      expect(dlqiResult.getScore().score).greaterThanOrEqual(0);
+      expect(dlqiResult.getScore().category).to.not.be.null;
+      for (let i = 1; i <= 10; i++) {
+        const facetCode = `question${i}`;
+        const facetScore = dlqiResult.getFacetScore(facetCode);
+        expect(facetScore.intensity).to.be.null;
+        expect(facetScore.value).to.be.within(0, 3);
+      }
+    }
 
     // UAS_LOCAL
-    const uasLocalScoringSystemValue = response.getScoringSystemValues('UAS_LOCAL');
-    expect(uasLocalScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const uasLocalResult = response.getScoringSystemResult('UAS_LOCAL');
+    expect(uasLocalResult).to.not.be.null;
+    if (uasLocalResult) {
+      expect(uasLocalResult.getScore().score).greaterThanOrEqual(0);
+      expect(uasLocalResult.getScore().category).to.not.be.null;
+      expect(uasLocalResult.getFacetScore('hiveNumber').intensity).to.be.null;
+      expect(uasLocalResult.getFacetScore('hiveNumber').value).greaterThanOrEqual(0);
+      expect(uasLocalResult.getFacetScore('itchiness').intensity).to.be.null;
+      expect(uasLocalResult.getFacetScore('itchiness').value).to.be.within(0, 4);
+    }
   });
 
   it('should work with atopic dermatitis followup', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/dermatitis.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -393,78 +423,69 @@ describe('Test followup requests', () => {
 
     expect(response.iaSeconds).greaterThan(0);
 
-    expect(response.scoringSystemsValues).to.have.lengthOf(2);
+    expect(response.scoringSystemsResults).to.have.lengthOf(2);
 
     // ASCORAD_LOCAL
-    const ascoradLocalScoringSystemValue = response.getScoringSystemValues('ASCORAD_LOCAL');
-    expect(ascoradLocalScoringSystemValue.getScore().calculatedScore).greaterThanOrEqual(0);
-    expect(ascoradLocalScoringSystemValue.getScore().category).to.not.be.null;
+    const ascoradLocalResult = response.getScoringSystemResult('ASCORAD_LOCAL');
+    expect(ascoradLocalResult).to.not.be.null;
+    if (ascoradLocalResult) {
+      expect(ascoradLocalResult.getScore().score).greaterThanOrEqual(0);
+      expect(ascoradLocalResult.getScore().category).to.not.be.null;
 
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('crusting').intensity).to.not.be
-      .null;
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('crusting').intensity
-    ).to.be.within(0, 100);
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('crusting').value).to.be.within(
-      0,
-      3
-    );
+      expect(ascoradLocalResult.getFacetScore('crusting').intensity).to.not.be.null;
+      expect(ascoradLocalResult.getFacetScore('crusting').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('crusting').value).to.be.within(0, 3);
 
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('dryness').intensity).to.not.be
-      .null;
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('dryness').intensity
-    ).to.be.within(0, 100);
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('crusting').value).to.be.within(
-      0,
-      3
-    );
+      expect(ascoradLocalResult.getFacetScore('dryness').intensity).to.not.be.null;
+      expect(ascoradLocalResult.getFacetScore('dryness').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('dryness').value).to.be.within(0, 3);
 
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('erythema').intensity).to.not.be
-      .null;
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('erythema').intensity
-    ).to.be.within(0, 100);
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('erythema').value).to.be.within(
-      0,
-      3
-    );
+      expect(ascoradLocalResult.getFacetScore('erythema').intensity).to.not.be.null;
+      expect(ascoradLocalResult.getFacetScore('erythema').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('erythema').value).to.be.within(0, 3);
 
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('excoriation').intensity).to.not
-      .be.null;
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('excoriation').intensity
-    ).to.be.within(0, 100);
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('excoriation').value
-    ).to.be.within(0, 3);
+      expect(ascoradLocalResult.getFacetScore('excoriation').intensity).to.not.be.null;
+      expect(ascoradLocalResult.getFacetScore('excoriation').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('excoriation').value).to.be.within(0, 3);
 
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('lichenification').intensity).to
-      .not.be.null;
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('lichenification').intensity
-    ).to.be.within(0, 100);
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('lichenification').value
-    ).to.be.within(0, 3);
+      expect(ascoradLocalResult.getFacetScore('lichenification').intensity).to.not.be.within(
+        0,
+        100
+      );
+      expect(ascoradLocalResult.getFacetScore('lichenification').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('lichenification').value).to.be.within(0, 3);
 
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('swelling').intensity).to.not.be
-      .null;
-    expect(
-      ascoradLocalScoringSystemValue.getFacetCalculatedValue('swelling').intensity
-    ).to.be.within(0, 100);
-    expect(ascoradLocalScoringSystemValue.getFacetCalculatedValue('swelling').value).to.be.within(
-      0,
-      3
-    );
+      expect(ascoradLocalResult.getFacetScore('swelling').intensity).to.not.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('swelling').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('swelling').value).to.be.within(0, 3);
+
+      expect(ascoradLocalResult.getFacetScore('itchinessScorad').intensity).to.be.null;
+      expect(ascoradLocalResult.getFacetScore('itchinessScorad').intensity).to.be.within(0, 10);
+
+      expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.null;
+      expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.within(0, 10);
+
+      expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.null;
+      expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.within(0, 100);
+    }
 
     // DLQI
-    const dlqiScoringSystemValue = response.getScoringSystemValues('DLQI');
-    expect(dlqiScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const dlqiResult = response.getScoringSystemResult('DLQI');
+    expect(dlqiResult).to.not.be.null;
+    if (dlqiResult) {
+      expect(dlqiResult.getScore().score).greaterThanOrEqual(0);
+      expect(dlqiResult.getScore().category).to.not.be.null;
+      for (let i = 1; i <= 10; i++) {
+        const facetCode = `question${i}`;
+        const facetScore = dlqiResult.getFacetScore(facetCode);
+        expect(facetScore.intensity).to.be.null;
+        expect(facetScore.value).to.be.within(0, 3);
+      }
+    }
   });
 
   it('should work with hidradenitis followup', async function () {
-    const mediaAnalyzer = new MediaAnalyzer(env.parsed.API_URL, env.parsed.API_KEY);
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
     const imagePath = path.resolve('./test/resources/hidradenitis_01.png');
     const image = readFileSync(imagePath, {encoding: 'base64'});
@@ -522,29 +543,45 @@ describe('Test followup requests', () => {
 
     expect(response.iaSeconds).greaterThan(0);
 
-    expect(response.scoringSystemsValues).to.have.lengthOf(3);
+    expect(response.scoringSystemsResults).to.have.lengthOf(3);
 
     // AIHS4_LOCAL
-    const aihs4LocalScoringSystemValue = response.getScoringSystemValues('AIHS4_LOCAL');
-    expect(aihs4LocalScoringSystemValue.getScore().calculatedScore).greaterThanOrEqual(0);
-    expect(aihs4LocalScoringSystemValue.getScore().category).to.not.be.null;
+    const aihs4LocalResult = response.getScoringSystemResult('AIHS4_LOCAL');
+    expect(aihs4LocalResult).to.not.be.null;
+    if (aihs4LocalResult) {
+      expect(aihs4LocalResult.getScore().score).greaterThanOrEqual(0);
+      expect(aihs4LocalResult.getScore().category).to.not.be.null;
 
-    expect(
-      aihs4LocalScoringSystemValue.getFacetCalculatedValue('abscesseNumber').value
-    ).greaterThanOrEqual(0);
-    expect(
-      aihs4LocalScoringSystemValue.getFacetCalculatedValue('drainingTunnelNumber').value
-    ).greaterThanOrEqual(0);
-    expect(
-      aihs4LocalScoringSystemValue.getFacetCalculatedValue('noduleNumber').value
-    ).greaterThanOrEqual(0);
+      expect(aihs4LocalResult.getFacetScore('abscesseNumber').value).greaterThanOrEqual(0);
+      expect(aihs4LocalResult.getFacetScore('drainingTunnelNumber').value).greaterThanOrEqual(0);
+      expect(aihs4LocalResult.getFacetScore('noduleNumber').value).greaterThanOrEqual(0);
+    }
 
     // DLQI
-    const dlqiScoringSystemValue = response.getScoringSystemValues('DLQI');
-    expect(dlqiScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const dlqiResult = response.getScoringSystemResult('DLQI');
+    expect(dlqiResult).to.not.be.null;
+    if (dlqiResult) {
+      expect(dlqiResult.getScore().score).greaterThanOrEqual(0);
+      expect(dlqiResult.getScore().category).to.not.be.null;
+      for (let i = 1; i <= 10; i++) {
+        const facetCode = `question${i}`;
+        const facetScore = dlqiResult.getFacetScore(facetCode);
+        expect(facetScore.intensity).to.be.null;
+        expect(facetScore.value).to.be.within(0, 3);
+      }
+    }
 
     // IHS4_LOCAL
-    const ihs4ScoringSystemValue = response.getScoringSystemValues('IHS4_LOCAL');
-    expect(ihs4ScoringSystemValue.getScore().questionnaireScore).greaterThanOrEqual(0);
+    const ihs4LocalResult = response.getScoringSystemResult('IHS4_LOCAL');
+    expect(ihs4LocalResult).to.not.be.null;
+    if (ihs4LocalResult) {
+      expect(ihs4LocalResult.getScore().score).greaterThanOrEqual(0);
+      expect(ihs4LocalResult.getScore().category).to.not.be.null;
+      ['abscesseNumber', 'drainingTunnelNumber', 'noduleNumber'].forEach(function (facetCode) {
+        const facetScore = ihs4LocalResult.getFacetScore(facetCode);
+        expect(facetScore.value).greaterThanOrEqual(0);
+        expect(facetScore.intensity).to.be.null;
+      });
+    }
   });
 });

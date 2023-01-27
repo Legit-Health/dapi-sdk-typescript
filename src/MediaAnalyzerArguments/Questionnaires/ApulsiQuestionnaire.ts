@@ -2,25 +2,25 @@ import Questionnaire from './Questionnaire';
 
 export default class ApulsiQuestionnaire extends Questionnaire {
   constructor(
-    public readonly erythema_surface: number,
-    public readonly pain_apusa: number,
-    public readonly odor_apusa: number
+    public readonly erythemaSurface: number,
+    public readonly painApusa: number,
+    public readonly odorApusa: number
   ) {
     super();
-    this.ensureIsInRange(erythema_surface, 0, 6, 'erythema_surface');
-    this.ensureIsInRange(pain_apusa, 0, 1, 'pain_apusa');
-    this.ensureIsInRange(odor_apusa, 0, 1, 'odor_apusa');
+    this.ensureIsInRange(erythemaSurface, 0, 6, 'erythemaSurface');
+    this.ensureIsInRange(painApusa, 0, 1, 'painApusa');
+    this.ensureIsInRange(odorApusa, 0, 1, 'odorApusa');
   }
 
   public getName(): string {
     return 'APULSI';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
-      erythema_surface: this.erythema_surface,
-      pain_apusa: this.pain_apusa,
-      odor_apusa: this.odor_apusa
+      erythemaSurface: this.erythemaSurface,
+      painApusa: this.painApusa,
+      odorApusa: this.odorApusa
     };
   }
 }
