@@ -23,6 +23,7 @@ import {
   PreviousMedia,
   MediaAnalyzer
 } from '../index';
+import DetectionLabel from '../lib/MediaAnalyzerResponse/ScoringSystem/DetectionLabel';
 
 const env = dotenv.config({path: '.env.local'});
 
@@ -94,7 +95,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.not.be.null;
+    expect(response.explainabilityMedia).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -122,6 +123,17 @@ describe('Test followup requests', () => {
       expect(apasiLocalResult.getFacetScore('surface').intensity).to.not.be.null;
       expect(apasiLocalResult.getFacetScore('surface').intensity).to.be.within(0, 100);
       expect(apasiLocalResult.getFacetScore('surface').value).to.be.within(0, 6);
+
+      expect(apasiLocalResult.explainabilityMedia.content).to.be.not.null;
+      if (apasiLocalResult.explainabilityMedia.detections) {
+        expect(apasiLocalResult.explainabilityMedia.detections).to.have.lengthOf.greaterThan(0);
+        const detection = apasiLocalResult.explainabilityMedia.detections[0];
+        expect(detection.confidence).greaterThanOrEqual(0);
+        expect(detection.p1.x).greaterThanOrEqual(0);
+        expect(detection.p1.y).greaterThanOrEqual(0);
+        expect(detection.p2.x).greaterThanOrEqual(0);
+        expect(detection.p2.y).greaterThanOrEqual(0);
+      }
     }
 
     // DLQI
@@ -136,6 +148,8 @@ describe('Test followup requests', () => {
         expect(facetScore.intensity).to.be.null;
         expect(facetScore.value).to.be.within(0, 3);
       }
+      expect(dlqiResult.explainabilityMedia.content).to.be.null;
+      expect(dlqiResult.explainabilityMedia.detections).to.be.null;
     }
 
     // PURE4
@@ -150,6 +164,8 @@ describe('Test followup requests', () => {
         expect(facetScore.intensity).to.be.null;
         expect(facetScore.value).to.be.within(0, 3);
       }
+      expect(pure4Result.explainabilityMedia.content).to.be.null;
+      expect(pure4Result.explainabilityMedia.detections).to.be.null;
     }
 
     // PASI_LOCAL
@@ -165,6 +181,8 @@ describe('Test followup requests', () => {
       expect(pasiResult.getFacetScore('induration').value).to.be.within(0, 4);
       expect(pasiResult.getFacetScore('surface').intensity).to.be.null;
       expect(pasiResult.getFacetScore('surface').value).to.be.within(0, 6);
+      expect(pasiResult.explainabilityMedia.content).to.be.null;
+      expect(pasiResult.explainabilityMedia.detections).to.be.null;
     }
   });
 
@@ -222,7 +240,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.not.be.null;
+    expect(response.explainabilityMedia).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -245,6 +263,18 @@ describe('Test followup requests', () => {
       expect(alegiResult.getFacetScore('lesionNumber').intensity).lessThanOrEqual(100);
       expect(alegiResult.getFacetScore('lesionNumber').value).to.not.be.null;
       expect(alegiResult.getFacetScore('lesionNumber').value).greaterThan(0);
+
+      expect(alegiResult.explainabilityMedia.content).to.not.be.null;
+      if (alegiResult.explainabilityMedia.detections) {
+        expect(alegiResult.explainabilityMedia.detections).to.have.lengthOf.greaterThan(0);
+        const detection = alegiResult.explainabilityMedia.detections[0];
+        expect(detection.confidence).greaterThanOrEqual(0);
+        expect(detection.p1.x).greaterThanOrEqual(0);
+        expect(detection.p1.y).greaterThanOrEqual(0);
+        expect(detection.p2.x).greaterThanOrEqual(0);
+        expect(detection.p2.y).greaterThanOrEqual(0);
+        expect(detection.detectionLabel).to.equal(DetectionLabel.AcneLesion);
+      }
     }
 
     // DLQI
@@ -258,6 +288,8 @@ describe('Test followup requests', () => {
         const facetScore = dlqiResult.getFacetScore(facetCode);
         expect(facetScore.intensity).to.be.null;
         expect(facetScore.value).to.be.within(0, 3);
+        expect(dlqiResult.explainabilityMedia.content).to.be.null;
+        expect(dlqiResult.explainabilityMedia.detections).to.be.null;
       }
     }
   });
@@ -318,7 +350,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.not.be.null;
+    expect(response.explainabilityMedia).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -335,6 +367,19 @@ describe('Test followup requests', () => {
       expect(auasLocalResult.getFacetScore('hiveNumber').intensity).greaterThanOrEqual(0);
       expect(auasLocalResult.getFacetScore('itchiness').intensity).to.be.null;
       expect(auasLocalResult.getFacetScore('itchiness').value).to.be.within(0, 3);
+
+      expect(auasLocalResult.explainabilityMedia.content).to.not.be.null;
+      expect(auasLocalResult.explainabilityMedia.detections).to.not.be.null;
+      expect(auasLocalResult.explainabilityMedia.detections).to.have.lengthOf.greaterThan(0);
+      if (auasLocalResult.explainabilityMedia.detections) {
+        const detection = auasLocalResult.explainabilityMedia.detections[0];
+        expect(detection.confidence).greaterThanOrEqual(0);
+        expect(detection.p1.x).greaterThanOrEqual(0);
+        expect(detection.p1.y).greaterThanOrEqual(0);
+        expect(detection.p2.x).greaterThanOrEqual(0);
+        expect(detection.p2.y).greaterThanOrEqual(0);
+        expect(detection.detectionLabel).to.be.equal(DetectionLabel.Hive);
+      }
     }
 
     // DLQI
@@ -348,6 +393,8 @@ describe('Test followup requests', () => {
         const facetScore = dlqiResult.getFacetScore(facetCode);
         expect(facetScore.intensity).to.be.null;
         expect(facetScore.value).to.be.within(0, 3);
+        expect(dlqiResult.explainabilityMedia.content).to.be.null;
+        expect(dlqiResult.explainabilityMedia.detections).to.be.null;
       }
     }
 
@@ -361,6 +408,8 @@ describe('Test followup requests', () => {
       expect(uasLocalResult.getFacetScore('hiveNumber').value).greaterThanOrEqual(0);
       expect(uasLocalResult.getFacetScore('itchiness').intensity).to.be.null;
       expect(uasLocalResult.getFacetScore('itchiness').value).to.be.within(0, 4);
+      expect(uasLocalResult.explainabilityMedia.content).to.be.null;
+      expect(uasLocalResult.explainabilityMedia.detections).to.be.null;
     }
   });
 
@@ -419,7 +468,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.not.be.null;
+    expect(response.explainabilityMedia).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -448,25 +497,26 @@ describe('Test followup requests', () => {
       expect(ascoradLocalResult.getFacetScore('excoriation').intensity).to.be.within(0, 100);
       expect(ascoradLocalResult.getFacetScore('excoriation').value).to.be.within(0, 3);
 
-      expect(ascoradLocalResult.getFacetScore('lichenification').intensity).to.not.be.within(
-        0,
-        100
-      );
+      expect(ascoradLocalResult.getFacetScore('lichenification').intensity).to.be.within(0, 100);
       expect(ascoradLocalResult.getFacetScore('lichenification').intensity).to.be.within(0, 100);
       expect(ascoradLocalResult.getFacetScore('lichenification').value).to.be.within(0, 3);
 
-      expect(ascoradLocalResult.getFacetScore('swelling').intensity).to.not.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('swelling').intensity).to.be.within(0, 100);
       expect(ascoradLocalResult.getFacetScore('swelling').intensity).to.be.within(0, 100);
       expect(ascoradLocalResult.getFacetScore('swelling').value).to.be.within(0, 3);
 
       expect(ascoradLocalResult.getFacetScore('itchinessScorad').intensity).to.be.null;
-      expect(ascoradLocalResult.getFacetScore('itchinessScorad').intensity).to.be.within(0, 10);
+      expect(ascoradLocalResult.getFacetScore('itchinessScorad').value).to.be.within(0, 10);
 
       expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.null;
-      expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.within(0, 10);
+      expect(ascoradLocalResult.getFacetScore('sleeplessness').value).to.be.within(0, 10);
 
       expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.null;
-      expect(ascoradLocalResult.getFacetScore('sleeplessness').intensity).to.be.within(0, 100);
+      expect(ascoradLocalResult.getFacetScore('sleeplessness').value).to.be.within(0, 10);
+
+      expect(ascoradLocalResult.explainabilityMedia).to.not.be.null;
+      expect(ascoradLocalResult.explainabilityMedia.content).to.not.be.null;
+      expect(ascoradLocalResult.explainabilityMedia.detections).to.be.null;
     }
 
     // DLQI
@@ -480,6 +530,8 @@ describe('Test followup requests', () => {
         const facetScore = dlqiResult.getFacetScore(facetCode);
         expect(facetScore.intensity).to.be.null;
         expect(facetScore.value).to.be.within(0, 3);
+        expect(dlqiResult.explainabilityMedia.content).to.be.null;
+        expect(dlqiResult.explainabilityMedia.detections).to.be.null;
       }
     }
   });
@@ -539,7 +591,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.not.be.null;
+    expect(response.explainabilityMedia).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -555,6 +607,25 @@ describe('Test followup requests', () => {
       expect(aihs4LocalResult.getFacetScore('abscesseNumber').value).greaterThanOrEqual(0);
       expect(aihs4LocalResult.getFacetScore('drainingTunnelNumber').value).greaterThanOrEqual(0);
       expect(aihs4LocalResult.getFacetScore('noduleNumber').value).greaterThanOrEqual(0);
+
+      expect(aihs4LocalResult.explainabilityMedia.content).to.not.be.null;
+      expect(aihs4LocalResult.explainabilityMedia.detections).to.not.be.null;
+      if (aihs4LocalResult.explainabilityMedia.detections) {
+        expect(aihs4LocalResult.explainabilityMedia.detections.length).greaterThanOrEqual(0);
+        if (aihs4LocalResult.explainabilityMedia.detections.length > 0) {
+          const detection = aihs4LocalResult.explainabilityMedia.detections[0];
+          expect(detection.confidence).greaterThanOrEqual(0);
+          expect(detection.p1.x).greaterThanOrEqual(0);
+          expect(detection.p1.y).greaterThanOrEqual(0);
+          expect(detection.p2.x).greaterThanOrEqual(0);
+          expect(detection.p2.y).greaterThanOrEqual(0);
+          expect(detection.detectionLabel).to.be.oneOf([
+            DetectionLabel.Hive,
+            DetectionLabel.DrainingTunnel,
+            DetectionLabel.Abscess
+          ]);
+        }
+      }
     }
 
     // DLQI
@@ -568,6 +639,8 @@ describe('Test followup requests', () => {
         const facetScore = dlqiResult.getFacetScore(facetCode);
         expect(facetScore.intensity).to.be.null;
         expect(facetScore.value).to.be.within(0, 3);
+        expect(dlqiResult.explainabilityMedia.content).to.be.null;
+        expect(dlqiResult.explainabilityMedia.detections).to.be.null;
       }
     }
 
@@ -581,6 +654,8 @@ describe('Test followup requests', () => {
         const facetScore = ihs4LocalResult.getFacetScore(facetCode);
         expect(facetScore.value).greaterThanOrEqual(0);
         expect(facetScore.intensity).to.be.null;
+        expect(ihs4LocalResult.explainabilityMedia.content).to.be.null;
+        expect(ihs4LocalResult.explainabilityMedia.detections).to.be.null;
       });
     }
   });

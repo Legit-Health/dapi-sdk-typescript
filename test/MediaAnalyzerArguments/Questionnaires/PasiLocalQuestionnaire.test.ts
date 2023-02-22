@@ -32,7 +32,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(7, 4, 4, 4);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`surface should be between 0 and 6`);
+      expect((error as Error).message).to.be.equals('surface should be between 0 and 6');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -41,7 +41,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(-1, 4, 4, 4);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`surface should be between 0 and 6`);
+      expect((error as Error).message).to.be.equals('surface should be between 0 and 6');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -50,7 +50,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(1, 5, 4, 4);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`erythema should be between 0 and 4`);
+      expect((error as Error).message).to.be.equals('erythema should be between 0 and 4');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -59,7 +59,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(1, -5, 4, 4);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`erythema should be between 0 and 4`);
+      expect((error as Error).message).to.be.equals('erythema should be between 0 and 4');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -68,7 +68,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(1, 4, 5, 4);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`induration should be between 0 and 4`);
+      expect((error as Error).message).to.be.equals('induration should be between 0 and 4');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -77,7 +77,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(1, 4, -1, 4);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`induration should be between 0 and 4`);
+      expect((error as Error).message).to.be.equals('induration should be between 0 and 4');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -86,7 +86,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(1, 4, 4, 5);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`desquamation should be between 0 and 4`);
+      expect((error as Error).message).to.be.equals('desquamation should be between 0 and 4');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -95,7 +95,7 @@ describe('Test PasiLocalQuestionnaire', () => {
       new PasiLocalQuestionnaire(1, 4, 4, -1);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`desquamation should be between 0 and 4`);
+      expect((error as Error).message).to.be.equals('desquamation should be between 0 and 4');
     }
     expect(exceptionIsThrown).to.be.true;
   });

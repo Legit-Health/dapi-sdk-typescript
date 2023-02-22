@@ -6,7 +6,6 @@ import MetricsValue from './MetricsValue';
 import PreliminaryFindingsValue from './PreliminaryFindingsValue';
 import ScoringSystemResult from './ScoringSystem/ScoringSystemResult';
 
-
 export default class MediaAnalyzerResponse {
   constructor(
     readonly preliminaryFindings: PreliminaryFindingsValue,
@@ -27,29 +26,28 @@ export default class MediaAnalyzerResponse {
       json.preliminaryFindings.needsBiopsySuspicion,
       json.preliminaryFindings.needsSpecialistsAttention
     );
-  
+
     const modality = json.detectedModality;
-  
+
     const isValid = json.mediaValidity.isValid;
     const diqaScore = json.mediaValidity.score;
     const mediaValidityMetrics = json.mediaValidity.metrics;
     const mediaValidity = new MediaValidity(isValid, diqaScore, mediaValidityMetrics);
-  
+
     const metrics = new MetricsValue(json.metrics.sensitivity, json.metrics.specificity);
     const explainabilityMediaContent = json.explainabilityMedia.content;
     const explainabilityMedia =
       explainabilityMediaContent === null || explainabilityMediaContent === ''
         ? null
         : explainabilityMediaContent;
-  
+
     const evolution = json.evolution;
     const scoringSystemsResults = evolution?.domains
-      ? Object.keys(evolution.domains).map(
-          (scoringSystemCode) =>
-            new ScoringSystemResult(scoringSystemCode, evolution.domains[scoringSystemCode])
+      ? Object.keys(evolution.domains).map((scoringSystemCode) =>
+          ScoringSystemResult.fromJson(scoringSystemCode, evolution.domains[scoringSystemCode])
         )
       : [];
-  
+
     const conclusions = json.conclusions
       ? json.conclusions
           .filter((singleConclusion) => singleConclusion.name)
@@ -63,9 +61,9 @@ export default class MediaAnalyzerResponse {
               )
           )
       : [];
-  
+
     const iaSeconds = json.time;
-  
+
     return new MediaAnalyzerResponse(
       preliminaryFindings,
       modality,
@@ -80,9 +78,7 @@ export default class MediaAnalyzerResponse {
 
   getScoringSystemResult(scoringSystemCode: string): ScoringSystemResult | null {
     return (
-      this.scoringSystemsResults.find(
-        (ssr) => ssr.scoringSystemCode === scoringSystemCode
-      ) ?? null
+      this.scoringSystemsResults.find((ssr) => ssr.scoringSystemCode === scoringSystemCode) ?? null
     );
   }
 

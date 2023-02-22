@@ -34,10 +34,21 @@ describe('Test AuasLocalQuestionnaire', () => {
         for (let j = 0; j < i; j++) {
           arr[j] = 3;
         }
-        new DlqiQuestionnaire(...arr);
+        new DlqiQuestionnaire(
+          arr[0],
+          arr[1],
+          arr[2],
+          arr[3],
+          arr[4],
+          arr[5],
+          arr[6],
+          arr[7],
+          arr[8],
+          arr[9]
+        );
       } catch (error) {
         exceptionIsThrown = true;
-        expect(error.message).to.be.equals(`question${i + 1} should be between 0 and 3`);
+        expect((error as Error).message).to.be.equals(`question${i + 1} should be between 0 and 3`);
       }
       expect(exceptionIsThrown).to.be.true;
     }
@@ -49,10 +60,21 @@ describe('Test AuasLocalQuestionnaire', () => {
         for (let j = 0; j < i; j++) {
           arr[j] = 3;
         }
-        new DlqiQuestionnaire(...arr);
+        new DlqiQuestionnaire(
+          arr[0],
+          arr[1],
+          arr[2],
+          arr[3],
+          arr[4],
+          arr[5],
+          arr[6],
+          arr[7],
+          arr[8],
+          arr[9]
+        );
       } catch (error) {
         exceptionIsThrown = true;
-        expect(error.message).to.be.equals(`question${i + 1} should be between 0 and 3`);
+        expect((error as Error).message).to.be.equals(`question${i + 1} should be between 0 and 3`);
       }
       expect(exceptionIsThrown).to.be.true;
     }

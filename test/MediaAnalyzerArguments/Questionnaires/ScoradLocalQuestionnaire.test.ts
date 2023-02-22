@@ -24,7 +24,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(101, 3, 3, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`surfaceValue should be between 0 and 100`);
+      expect((error as Error).message).to.be.equals('surfaceValue should be between 0 and 100');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -33,7 +33,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(-1, 3, 3, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`surfaceValue should be between 0 and 100`);
+      expect((error as Error).message).to.be.equals('surfaceValue should be between 0 and 100');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -42,7 +42,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 4, 3, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`erythema should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('erythema should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -51,7 +51,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, -1, 3, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`erythema should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('erythema should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -60,7 +60,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 4, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`swelling should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('swelling should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -69,7 +69,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, -1, 3, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`swelling should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('swelling should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -78,7 +78,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 4, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`crusting should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('crusting should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -87,7 +87,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, -1, 3, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`crusting should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('crusting should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -96,7 +96,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 4, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`excoriation should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('excoriation should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -105,7 +105,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, -1, 3, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`excoriation should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('excoriation should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -114,7 +114,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 4, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`lichenification should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('lichenification should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -123,7 +123,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, -1, 3, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`lichenification should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('lichenification should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -132,7 +132,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 4, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`dryness should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('dryness should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -141,7 +141,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, -1, 10, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`dryness should be between 0 and 3`);
+      expect((error as Error).message).to.be.equals('dryness should be between 0 and 3');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -150,7 +150,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 1, 11, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`itchinessScorad should be between 0 and 10`);
+      expect((error as Error).message).to.be.equals('itchinessScorad should be between 0 and 10');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -159,7 +159,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 1, -1, 10);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`itchinessScorad should be between 0 and 10`);
+      expect((error as Error).message).to.be.equals('itchinessScorad should be between 0 and 10');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -168,7 +168,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 1, 1, 11);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`sleeplessness should be between 0 and 10`);
+      expect((error as Error).message).to.be.equals('sleeplessness should be between 0 and 10');
     }
     expect(exceptionIsThrown).to.be.true;
 
@@ -177,7 +177,7 @@ describe('Test ScoradLocalQuestionnaire', () => {
       new ScoradLocalQuestionnaire(50, 1, 1, 1, 1, 1, 1, 1, -1);
     } catch (error) {
       exceptionIsThrown = true;
-      expect(error.message).to.be.equals(`sleeplessness should be between 0 and 10`);
+      expect((error as Error).message).to.be.equals('sleeplessness should be between 0 and 10');
     }
     expect(exceptionIsThrown).to.be.true;
   });

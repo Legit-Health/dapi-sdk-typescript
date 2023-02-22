@@ -26,10 +26,12 @@ describe('Test Pure4Questionnaire', () => {
         for (let j = 0; j < i; j++) {
           arr[j] = 0;
         }
-        new Pure4Questionnaire(...arr);
+        new Pure4Questionnaire(arr[0], arr[1], arr[2], arr[3]);
       } catch (error) {
         exceptionIsThrown = true;
-        expect(error.message).to.be.equals(`question${i + 1}Pure should be between 0 and 1`);
+        expect((error as Error).message).to.be.equals(
+          `question${i + 1}Pure should be between 0 and 1`
+        );
       }
       expect(exceptionIsThrown).to.be.true;
     }
@@ -41,10 +43,12 @@ describe('Test Pure4Questionnaire', () => {
         for (let j = 0; j < i; j++) {
           arr[j] = 1;
         }
-        new Pure4Questionnaire(...arr);
+        new Pure4Questionnaire(arr[0], arr[1], arr[2], arr[3]);
       } catch (error) {
         exceptionIsThrown = true;
-        expect(error.message).to.be.equals(`question${i + 1}Pure should be between 0 and 1`);
+        expect((error as Error).message).to.be.equals(
+          `question${i + 1}Pure should be between 0 and 1`
+        );
       }
       expect(exceptionIsThrown).to.be.true;
     }
