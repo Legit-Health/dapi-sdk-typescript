@@ -12,7 +12,10 @@ export default class ScoringSystemResult {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static fromJson(scoringSystemCode: string, json: any): ScoringSystemResult {
-    const scoringSystemScore = new ScoringSystemScore(json.grade.category, json.grade.score);
+    const scoringSystemScore = new ScoringSystemScore(
+      json.grade.category ?? null,
+      json.grade.score
+    );
 
     const facetScores: {[key: string]: FacetScore} = {};
     for (const facetCode of Object.keys(json.facets)) {

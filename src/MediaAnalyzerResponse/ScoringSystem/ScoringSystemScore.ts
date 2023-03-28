@@ -1,6 +1,3 @@
 export default class ScoringSystemScore {
-  constructor(
-    readonly category: string,
-    readonly score:  number
-  ) {}
+  constructor(readonly category: string | null, readonly score: number) {}
 }
