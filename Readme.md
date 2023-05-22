@@ -17,20 +17,20 @@ The class `MediaAnalyzer` exposes two methods:
 
 ## Predict requests
 
-The `predict` method of our `MediaAnalyzer` class receives one argument of the class `PredictArguments`. The constructor of this class receives several arguments, so you can specify the image itself and information about the patient or the body site:
+The `predict` method of our `MediaAnalyzer` class receives one argument of the class `MediaAnalyzerArguments` containing a `PredictData` object. The constructor of this class receives several arguments, so you can specify the image itself and information about the patient or the body site:
 
 ```js
 
 import MediaAnalyzer from '@legit.health/dapi-sdk/MediaAnalyzer';
-import PredictArguments from '@legit.health/dapi-sdk/PredictArguments';
+import PredictData from '@legit.health/dapi-sdk/PredictData';
+import MediaAnalyzerArguments from '@legit.health/dapi-sdk/MediaAnalyzerArguments';
 import BodySiteCode from '@legit.health/dapi-sdk/BodySiteCode';
 import Operator from '@legit.health/dapi-sdk/Operator';
 import Subject from '@legit.health/dapi-sdk/Subject';
 import Gender from '@legit.health/dapi-sdk/Gender';
 import Company from '@legit.health/dapi-sdk/Company';
 
-const predictArguments = new PredictArguments(
-    'requestId',
+const predictData = new PredictData(
     image,
     BodySiteCode.ArmLeft,
     Operator.Patient,
@@ -44,13 +44,17 @@ const predictArguments = new PredictArguments(
         new Company('company identifier', 'Company Name')
     )
 );
+const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+    generateRandomString(15),
+    predictData
+);
 ```
 
-Once you've created a `PredictArguments` object, you can send the request in this way:
+Once you've created a `PredictData` object, you can send the request in this way:
 
 ```js
 const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
-const response = await mediaAnalyzer.predict(predictArguments);
+const response = await mediaAnalyzer.predict(mediaAnalyzerArguments);
 ```
 
 The response object contains several properties with the information returned by the API about the analyzed image:
@@ -69,7 +73,7 @@ The response object contains several properties with the information returned by
 
 ## Follow up requests
 
-The `followUp` method of the `MediaAnalyzer` class receives one object of the class `FollowUpArguments`. The constructor of this class receives several arguments, so you can specify the image itself and information about a well known condition.
+The `followUp` method of the `MediaAnalyzer` class receives one object of the class `MediaAnalyzerArguments` containing a `FollowUpData` object. The constructor of this class receives several arguments, so you can specify the image itself and information about a well known condition.
 
 ### Example. Follow up request for psoriasis
 
@@ -97,13 +101,14 @@ Then, we will create an object of the class `@legit.health/dapi-sdk/FollowUpArgu
 
 ```ts
 // ...
-import FollowUpArguments from '@legit.health/dapi-sdk/FollowUpArguments';
+import FollowUpData from '@legit.health/dapi-sdk/FollowUpData';
+import MediaAnalyzerArguments from '@legit.health/dapi-sdk/MediaAnalyzerArguments';
 
 // ...
 const previousMedias = [new PreviousMedia(previousImage, previousImageDate)];
 const scoringSystems = questionnaires.questionnaires.map((questionnaire) => questionnaire.getName());
 // const scoringSystems = ['APASI_LOCAL', 'PASI_LOCAL', 'PURE4', 'DLQI'];
-const followUpArguments = new FollowUpArguments(
+const followUpData = new FollowUpData(
     generateRandomString(15),
     image,
     'Psoriasis',
@@ -122,6 +127,10 @@ const followUpArguments = new FollowUpArguments(
     questionnaires.questionnaires.map((questionnaire) => questionnaire.getName()),
     questionnaires
 );
+const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+    generateRandomString(15),
+    followUpData
+);
 ```
 
 Unlike diagnostic support requests, follow-up requests supports the following additional arguments:
@@ -136,11 +145,11 @@ Unlike diagnostic support requests, follow-up requests supports the following ad
 
 - `questionnaires` is an object of the class `@legit.health/dapi-sdkQuestionnaires` with the values of the scoring systems to be evaluated.
 
-Once you've created a `FollowUpArguments` object, you can send the request in this way:
+Once you've created a `MediaAnalyzerArguments` object, you can send the request in this way:
 
 ```ts
 const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
-const response = await mediaAnalyzer.followUp(followUpArguments);
+const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
 ```
 
 The response object contains several properties with the information returned by the API about the analyzed image:

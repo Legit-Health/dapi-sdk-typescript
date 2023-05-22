@@ -1,18 +1,16 @@
 import axios from 'axios';
 import AiResponse from './AiResponse';
-import FollowUpArguments from './MediaAnalyzerArguments/FollowUpArguments';
 import MediaAnalyzerArguments from './MediaAnalyzerArguments/MediaAnalyzerArguments';
-import PredictArguments from './MediaAnalyzerArguments/PredictArguments';
 import MediaAnalyzerError from './MediaAnalyzerError';
 
 export default class AiClient {
   constructor(private readonly baseUri: string, private readonly analyzerApiKey: string) {}
 
-  predict(predictArguments: PredictArguments): Promise<AiResponse> {
+  predict(predictArguments: MediaAnalyzerArguments): Promise<AiResponse> {
     return this.send(predictArguments);
   }
 
-  followUp(followUpArguments: FollowUpArguments): Promise<AiResponse> {
+  followUp(followUpArguments: MediaAnalyzerArguments): Promise<AiResponse> {
     return this.send(followUpArguments);
   }
 
@@ -20,7 +18,7 @@ export default class AiClient {
     try {
       const response = await axios.post(
         `${this.baseUri}/v2/legit_health/predict`,
-        mediaAnalyzerArguments.asApiRequest(),
+        mediaAnalyzerArguments.asObject(),
         {
           headers: {
             'x-api-key': this.analyzerApiKey
@@ -33,9 +31,7 @@ export default class AiClient {
       const json = response.data;
       return json;
     } catch (error) {
-      throw new MediaAnalyzerError(
-        error instanceof Error ? error.message : 'Unknown error.'
-      );
+      throw new MediaAnalyzerError(error instanceof Error ? error.message : 'Unknown error.');
     }
   }
 }

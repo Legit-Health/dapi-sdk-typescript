@@ -28,7 +28,7 @@ export default class ScoradLocalQuestionnaire extends Questionnaire {
     return 'SCORAD_LOCAL';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       surfaceValue: this.surfaceValue,
       itchinessScorad: this.itchinessScorad,

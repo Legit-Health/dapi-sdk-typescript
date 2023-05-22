@@ -11,6 +11,7 @@ import {
   AuasLocalQuestionnaire,
   UasLocalQuestionnaire,
   Ihs4LocalQuestionnaire,
+  SevenPCQuestionnaire,
   Pure4Questionnaire,
   DlqiQuestionnaire,
   Questionnaires,
@@ -19,11 +20,14 @@ import {
   Subject,
   Gender,
   Company,
-  FollowUpArguments,
+  FollowUpData,
+  MediaAnalyzerArguments,
   PreviousMedia,
-  MediaAnalyzer
+  MediaAnalyzer,
+  View
 } from '../index';
-import DetectionLabel from '../lib/MediaAnalyzerResponse/ScoringSystem/DetectionLabel';
+import DetectionLabel from '../lib/MediaAnalyzerResponse/DetectionLabel';
+import OrderDetail from '../lib/MediaAnalyzerArguments/OrderDetail';
 
 const env = dotenv.config({path: '.env.local'});
 
@@ -54,8 +58,7 @@ describe('Test followup requests', () => {
     const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
     const questionnaires = new Questionnaires([apasiLocal, pasiLocal, pure4, dlqi]);
 
-    const followUpArguments = new FollowUpArguments(
-      generateRandomString(15),
+    const followUpData = new FollowUpData(
       image,
       'Psoriasis',
       BodySiteCode.ArmLeft,
@@ -73,7 +76,11 @@ describe('Test followup requests', () => {
       questionnaires.questionnaires.map((questionnaire) => questionnaire.getName()),
       questionnaires
     );
-    const response = await mediaAnalyzer.followUp(followUpArguments);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -95,7 +102,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia.content).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -199,8 +206,7 @@ describe('Test followup requests', () => {
     const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
     const questionnaires = new Questionnaires([dlqi]);
 
-    const followUpArguments = new FollowUpArguments(
-      generateRandomString(15),
+    const followUpData = new FollowUpData(
       image,
       'Acne',
       BodySiteCode.HeadFront,
@@ -218,7 +224,11 @@ describe('Test followup requests', () => {
       ['DLQI', 'ALEGI'],
       questionnaires
     );
-    const response = await mediaAnalyzer.followUp(followUpArguments);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -240,7 +250,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.be.not.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -294,26 +304,22 @@ describe('Test followup requests', () => {
     }
   });
 
-  it('should work with urticaria followup', async function () {
+  it('should work with acne followup using face anterior projection', async function () {
     const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
 
-    const imagePath = path.resolve('./test/resources/urticaria.jpg');
+    const imagePath = path.resolve('./test/resources/acne.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
 
-    const previousImagePath = path.resolve('./test/resources/urticaria.jpg');
+    const previousImagePath = path.resolve('./test/resources/acne_face.jpg');
     const previousImage = readFileSync(previousImagePath, {encoding: 'base64'});
     const previousImageDate = subMonths(new Date(), 1);
 
-    const auasLocal = new AuasLocalQuestionnaire(2);
-    const uasLocal = new UasLocalQuestionnaire(2, 5);
-    const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
-    const questionnaires = new Questionnaires([dlqi, auasLocal, uasLocal]);
+    const questionnaires = new Questionnaires([]);
 
-    const followUpArguments = new FollowUpArguments(
-      generateRandomString(15),
+    const followUpData = new FollowUpData(
       image,
-      'Hives urticaria',
-      BodySiteCode.ArmLeft,
+      'Acne',
+      BodySiteCode.HeadFront,
       [new PreviousMedia(previousImage, previousImageDate)],
       Operator.Patient,
       new Subject(
@@ -325,10 +331,16 @@ describe('Test followup requests', () => {
         generateRandomString(15),
         new Company(generateRandomString(), 'Company Name')
       ),
-      questionnaires.questionnaires.map((q) => q.getName()),
-      questionnaires
+      ['ALEGI'],
+      questionnaires,
+      new View('Anterior projection')
     );
-    const response = await mediaAnalyzer.followUp(followUpArguments);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData,
+      new OrderDetail(true)
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -350,7 +362,106 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.be.not.null;
+    expect(response.explainabilityMedia.content).to.be.null;
+    expect(response.explainabilityMedia.metrics.pxToCm).to.be.not.null;
+
+    expect(response.iaSeconds).greaterThan(0);
+
+    expect(response.scoringSystemsResults).to.have.lengthOf(1);
+
+    // ALEGI
+    const alegiResult = response.getScoringSystemResult('ALEGI');
+    expect(alegiResult).to.not.be.null;
+    if (alegiResult) {
+      expect(alegiResult.getScore().score).greaterThanOrEqual(0);
+      expect(alegiResult.getScore().category).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionDensity').intensity).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionDensity').intensity).greaterThanOrEqual(0);
+      expect(alegiResult.getFacetScore('lesionDensity').intensity).lessThanOrEqual(100);
+      expect(alegiResult.getFacetScore('lesionDensity').value).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionDensity').value).greaterThanOrEqual(0);
+      expect(alegiResult.getFacetScore('lesionDensity').value).lessThanOrEqual(4);
+      expect(alegiResult.getFacetScore('lesionNumber').intensity).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionNumber').intensity).greaterThanOrEqual(0);
+      expect(alegiResult.getFacetScore('lesionNumber').intensity).lessThanOrEqual(100);
+      expect(alegiResult.getFacetScore('lesionNumber').value).to.not.be.null;
+      expect(alegiResult.getFacetScore('lesionNumber').value).greaterThan(0);
+
+      expect(alegiResult.explainabilityMedia.content).to.not.be.null;
+      if (alegiResult.explainabilityMedia.detections) {
+        expect(alegiResult.explainabilityMedia.detections).to.have.lengthOf.greaterThan(0);
+        const detection = alegiResult.explainabilityMedia.detections[0];
+        expect(detection.confidence).greaterThanOrEqual(0);
+        expect(detection.p1.x).greaterThanOrEqual(0);
+        expect(detection.p1.y).greaterThanOrEqual(0);
+        expect(detection.p2.x).greaterThanOrEqual(0);
+        expect(detection.p2.y).greaterThanOrEqual(0);
+        expect(detection.detectionLabel).to.equal(DetectionLabel.AcneLesion);
+      }
+    }
+  });
+
+  it('should work with urticaria followup', async function () {
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
+
+    const imagePath = path.resolve('./test/resources/urticaria.jpg');
+    const image = readFileSync(imagePath, {encoding: 'base64'});
+
+    const previousImagePath = path.resolve('./test/resources/urticaria.jpg');
+    const previousImage = readFileSync(previousImagePath, {encoding: 'base64'});
+    const previousImageDate = subMonths(new Date(), 1);
+
+    const auasLocal = new AuasLocalQuestionnaire(2);
+    const uasLocal = new UasLocalQuestionnaire(2, 5);
+    const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
+    const questionnaires = new Questionnaires([dlqi, auasLocal, uasLocal]);
+
+    const followUpData = new FollowUpData(
+      image,
+      'Hives urticaria',
+      BodySiteCode.ArmLeft,
+      [new PreviousMedia(previousImage, previousImageDate)],
+      Operator.Patient,
+      new Subject(
+        generateRandomString(15),
+        Gender.Male,
+        '1.75',
+        '69.00',
+        new Date(),
+        generateRandomString(15),
+        new Company(generateRandomString(), 'Company Name')
+      ),
+      questionnaires.questionnaires.map((q) => q.getName()),
+      questionnaires
+    );
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
+
+    expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
+
+    expect(response.modality).to.not.be.null;
+
+    const mediaValidity = response.mediaValidity;
+    expect(mediaValidity.isValid).to.be.true;
+    expect(mediaValidity.diqaScore).greaterThan(0);
+    mediaValidity.validityMetrics.forEach(function (validityMetric) {
+      expect(validityMetric.pass).to.be.true;
+      expect(validityMetric.name).to.be.not.empty;
+    });
+
+    const metrics = response.metricsValue;
+    expect(metrics.sensitivity).greaterThan(0);
+    expect(metrics.specificity).greaterThan(0);
+
+    expect(response.explainabilityMedia.content).to.be.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -427,8 +538,7 @@ describe('Test followup requests', () => {
     const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
     const questionnaires = new Questionnaires([dlqi, ascoradLocal]);
 
-    const followUpArguments = new FollowUpArguments(
-      generateRandomString(15),
+    const followUpData = new FollowUpData(
       image,
       'Atopic dermatitis',
       BodySiteCode.ArmLeft,
@@ -446,7 +556,11 @@ describe('Test followup requests', () => {
       questionnaires.questionnaires.map((q) => q.getName()),
       questionnaires
     );
-    const response = await mediaAnalyzer.followUp(followUpArguments);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -468,7 +582,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.be.not.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -550,8 +664,7 @@ describe('Test followup requests', () => {
     const dlqi = new DlqiQuestionnaire(1, 1, 2, 0, 0, 0, 1, 2, 2, 0);
     const questionnaires = new Questionnaires([dlqi, ihs4Local]);
 
-    const followUpArguments = new FollowUpArguments(
-      generateRandomString(15),
+    const followUpData = new FollowUpData(
       image,
       'Hidradenitis suppurativa',
       BodySiteCode.ArmLeft,
@@ -569,7 +682,11 @@ describe('Test followup requests', () => {
       ['AIHS4_LOCAL', 'IHS4_LOCAL', 'DLQI'],
       questionnaires
     );
-    const response = await mediaAnalyzer.followUp(followUpArguments);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -591,7 +708,7 @@ describe('Test followup requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.be.not.null;
 
     expect(response.iaSeconds).greaterThan(0);
 
@@ -657,6 +774,99 @@ describe('Test followup requests', () => {
         expect(ihs4LocalResult.explainabilityMedia.content).to.be.null;
         expect(ihs4LocalResult.explainabilityMedia.detections).to.be.null;
       });
+    }
+  });
+
+  it('should work with nevus followup', async function () {
+    const mediaAnalyzer = new MediaAnalyzer(apiUrl, apiKey);
+
+    const imagePath = path.resolve('./test/resources/nevus.jpg');
+    const image = readFileSync(imagePath, {encoding: 'base64'});
+
+    const previousImagePath = path.resolve('./test/resources/nevus.jpg');
+    const previousImage = readFileSync(previousImagePath, {encoding: 'base64'});
+    const previousImageDate = subMonths(new Date(), 1);
+
+    const sevenPC = new SevenPCQuestionnaire(1, 1, 1, 0, 0, 0, 1);
+    const questionnaires = new Questionnaires([sevenPC]);
+
+    const followUpData = new FollowUpData(
+      image,
+      'Nevus',
+      BodySiteCode.ArmLeft,
+      [new PreviousMedia(previousImage, previousImageDate)],
+      Operator.Patient,
+      new Subject(
+        generateRandomString(15),
+        Gender.Male,
+        '1.75',
+        '69.00',
+        new Date(),
+        generateRandomString(15),
+        new Company(generateRandomString(), 'Company Name')
+      ),
+      questionnaires.questionnaires.map((q) => q.getName()),
+      questionnaires
+    );
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      followUpData
+    );
+    const response = await mediaAnalyzer.followUp(mediaAnalyzerArguments);
+
+    expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.isMalignantSuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.needsBiopsySuspicion).greaterThanOrEqual(0);
+    expect(response.preliminaryFindings.needsSpecialistsAttention).greaterThanOrEqual(0);
+
+    expect(response.modality).to.not.be.null;
+
+    const mediaValidity = response.mediaValidity;
+    expect(mediaValidity.isValid).to.be.true;
+    expect(mediaValidity.diqaScore).greaterThan(0);
+    mediaValidity.validityMetrics.forEach(function (validityMetric) {
+      expect(validityMetric.pass).to.be.true;
+      expect(validityMetric.name).to.be.not.empty;
+    });
+
+    const metrics = response.metricsValue;
+    expect(metrics.sensitivity).greaterThan(0);
+    expect(metrics.specificity).greaterThan(0);
+
+    expect(response.explainabilityMedia).to.be.not.null;
+
+    expect(response.iaSeconds).greaterThan(0);
+
+    expect(response.scoringSystemsResults).to.have.lengthOf(1);
+
+    // 7PC
+    const sevenPCResult = response.getScoringSystemResult('7PC');
+    expect(sevenPCResult).to.not.be.null;
+    if (sevenPCResult) {
+      expect(sevenPCResult.getScore().score).greaterThanOrEqual(0);
+      expect(sevenPCResult.getScore().category).to.not.be.null;
+
+      expect(sevenPCResult.getFacetScore('question1SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question1SevenPC').value).to.be.equal(1);
+
+      expect(sevenPCResult.getFacetScore('question2SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question2SevenPC').value).to.be.equal(1);
+
+      expect(sevenPCResult.getFacetScore('question3SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question3SevenPC').value).to.be.equal(1);
+
+      expect(sevenPCResult.getFacetScore('question4SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question4SevenPC').value).to.be.equal(0);
+
+      expect(sevenPCResult.getFacetScore('question5SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question5SevenPC').value).to.be.equal(0);
+
+      expect(sevenPCResult.getFacetScore('question6SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question6SevenPC').value).to.be.equal(0);
+
+      expect(sevenPCResult.getFacetScore('question7SevenPC').intensity).to.be.null;
+      expect(sevenPCResult.getFacetScore('question7SevenPC').value).to.be.equal(1);
     }
   });
 });

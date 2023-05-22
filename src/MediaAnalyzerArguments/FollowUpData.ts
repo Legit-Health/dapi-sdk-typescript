@@ -1,13 +1,13 @@
 import BodySiteCode from './BodySite/BodySiteCode';
-import MediaAnalyzerArguments from './MediaAnalyzerArguments';
+import MediaAnalyzerData from './MediaAnalyzerData';
 import Operator from './Operator/Operator';
 import PreviousMedia from './PreviousMedia/PreviousMedia';
 import Questionnaires from './Questionnaires/Questionnaires';
 import Subject from './Subject/Subject';
+import View from './View/View';
 
-export default class FollowUpArguments extends MediaAnalyzerArguments {
+export default class FollowUpData extends MediaAnalyzerData {
   constructor(
-    requestId: string,
     content: string,
     pathologyCode: string,
     bodySiteCode: BodySiteCode | null = null,
@@ -15,10 +15,10 @@ export default class FollowUpArguments extends MediaAnalyzerArguments {
     operator: Operator | null = null,
     subject: Subject | null = null,
     scoringSystems: string[] = [],
-    questionnaires = new Questionnaires([])
+    questionnaires = new Questionnaires([]),
+    view: View | null = null
   ) {
     super(
-      requestId,
       content,
       bodySiteCode,
       pathologyCode,
@@ -26,7 +26,8 @@ export default class FollowUpArguments extends MediaAnalyzerArguments {
       operator,
       subject,
       scoringSystems,
-      questionnaires
+      questionnaires,
+      view
     );
   }
 }

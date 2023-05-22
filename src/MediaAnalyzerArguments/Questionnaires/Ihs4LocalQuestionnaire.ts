@@ -13,7 +13,7 @@ export default class Ihs4LocalQuestionnaire extends Questionnaire {
     return 'IHS4_LOCAL';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       noduleNumber: this.noduleNumber,
       abscesseNumber: this.abscesseNumber,

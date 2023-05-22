@@ -1,9 +1,5 @@
 import Questionnaire from './Questionnaire';
 
-type AuasLocalQuestionnaireObject = {
-  itchiness: number;
-}
-
 export default class AuasLocalQuestionnaire extends Questionnaire {
   constructor(public readonly itchiness: number) {
     super();
@@ -14,7 +10,7 @@ export default class AuasLocalQuestionnaire extends Questionnaire {
     return 'AUAS_LOCAL';
   }
 
-  public asObject(): AuasLocalQuestionnaireObject {
+  public asObject() {
     return {
       itchiness: this.itchiness
     };

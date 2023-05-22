@@ -10,7 +10,7 @@ export default class UasLocalQuestionnaire extends Questionnaire {
     return 'UAS_LOCAL';
   }
 
-  public asObject(): Record<string, any> {
+  public asObject() {
     return {
       itchiness: this.itchiness,
       hiveNumber: this.hiveNumber

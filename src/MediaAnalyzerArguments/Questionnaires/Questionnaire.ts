@@ -1,5 +1,5 @@
 export default abstract class Questionnaire {
-  abstract asObject(): Record<string, any>;
+  abstract asObject(): Record<string, string | number>;
   abstract getName(): string;
 
   protected ensureIsInRange(value: number, min: number, max: number, name: string) {

@@ -1,5 +1,5 @@
 import DetectionLabel from './DetectionLabel';
-import Point2d from './Point2d';
+import Point2d from './ScoringSystem/Point2d';
 
 export class Detection {
   constructor(

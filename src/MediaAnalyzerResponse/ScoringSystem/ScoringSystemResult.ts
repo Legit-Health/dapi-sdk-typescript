@@ -1,4 +1,4 @@
-import ExplainabilityMedia from './ExplainabilityMedia';
+import ExplainabilityMedia from '../ExplainabilityMedia';
 import FacetScore from './FacetScore';
 import ScoringSystemScore from './ScoringSystemScore';
 

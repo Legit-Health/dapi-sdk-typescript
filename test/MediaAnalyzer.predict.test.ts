@@ -10,7 +10,8 @@ import {
   Subject,
   Gender,
   Company,
-  PredictArguments
+  PredictData,
+  MediaAnalyzerArguments
 } from '../index';
 
 const env = dotenv.config({path: '.env.local'});
@@ -31,8 +32,12 @@ describe('Test predict requests', () => {
 
     const imagePath = path.resolve('./test/resources/acne.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
-    const predictArguments = new PredictArguments(generateRandomString(15), image);
-    const response = await mediaAnalyzer.predict(predictArguments);
+    const predictData = new PredictData(image);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      predictData
+    );
+    const response = await mediaAnalyzer.predict(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -54,7 +59,7 @@ describe('Test predict requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.be.not.null;
 
     expect(response.scoringSystemsResults).to.be.empty;
 
@@ -73,8 +78,7 @@ describe('Test predict requests', () => {
 
     const imagePath = path.resolve('./test/resources/acne.jpg');
     const image = readFileSync(imagePath, {encoding: 'base64'});
-    const predictArguments = new PredictArguments(
-      generateRandomString(15),
+    const predictData = new PredictData(
       image,
       BodySiteCode.ArmLeft,
       Operator.Patient,
@@ -88,7 +92,11 @@ describe('Test predict requests', () => {
         new Company(generateRandomString(), 'Company Name')
       )
     );
-    const response = await mediaAnalyzer.predict(predictArguments);
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      predictData
+    );
+    const response = await mediaAnalyzer.predict(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -110,7 +118,7 @@ describe('Test predict requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.be.not.null;
 
     expect(response.scoringSystemsResults).to.be.empty;
 
@@ -129,8 +137,13 @@ describe('Test predict requests', () => {
 
     const imagePath = path.resolve('./test/resources/invalid.png');
     const image = readFileSync(imagePath, {encoding: 'base64'});
-    const predictArguments = new PredictArguments(generateRandomString(15), image);
-    const response = await mediaAnalyzer.predict(predictArguments);
+    const predictData = new PredictData(image);
+
+    const mediaAnalyzerArguments = new MediaAnalyzerArguments(
+      generateRandomString(15),
+      predictData
+    );
+    const response = await mediaAnalyzer.predict(mediaAnalyzerArguments);
 
     expect(response.preliminaryFindings.hasConditionSuspicion).greaterThanOrEqual(0);
     expect(response.preliminaryFindings.isPreMalignantSuspicion).greaterThanOrEqual(0);
@@ -155,7 +168,7 @@ describe('Test predict requests', () => {
     expect(metrics.sensitivity).greaterThan(0);
     expect(metrics.specificity).greaterThan(0);
 
-    expect(response.explainabilityMedia).to.be.null;
+    expect(response.explainabilityMedia).to.not.be.null;
 
     expect(response.scoringSystemsResults).to.be.empty;
 

@@ -1,6 +1,5 @@
 import AiClient from './AiClient';
-import FollowUpArguments from './MediaAnalyzerArguments/FollowUpArguments';
-import PredictArguments from './MediaAnalyzerArguments/PredictArguments';
+import MediaAnalyzerArguments from './MediaAnalyzerArguments/MediaAnalyzerArguments';
 import MediaAnalyzerResponse from './MediaAnalyzerResponse/MediaAnalyzerResponse';
 
 export default class MediaAnalyzer {
@@ -10,12 +9,12 @@ export default class MediaAnalyzer {
     this.aiClient = new AiClient(baseUri, analyzerApiKey);
   }
 
-  async predict(predictArguments: PredictArguments): Promise<MediaAnalyzerResponse> {
+  async predict(predictArguments: MediaAnalyzerArguments): Promise<MediaAnalyzerResponse> {
     const json = await this.aiClient.predict(predictArguments);
     return MediaAnalyzerResponse.fromJson(json);
   }
 
-  async followUp(followUpArguments: FollowUpArguments): Promise<MediaAnalyzerResponse> {
+  async followUp(followUpArguments: MediaAnalyzerArguments): Promise<MediaAnalyzerResponse> {
     const json = await this.aiClient.followUp(followUpArguments);
     return MediaAnalyzerResponse.fromJson(json);
   }

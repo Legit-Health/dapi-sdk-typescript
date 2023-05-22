@@ -1,5 +1,6 @@
 import AiResponse from '../AiResponse';
 import Conclusion from './Conclusion/Conclusion';
+import ExplainabilityMedia from './ExplainabilityMedia';
 import MediaValidity from './MediaValidity/MediaValidity';
 import ValidityMetric from './MediaValidity/ValidityMetric';
 import MetricsValue from './MetricsValue';
@@ -12,7 +13,7 @@ export default class MediaAnalyzerResponse {
     readonly modality: string,
     readonly mediaValidity: MediaValidity,
     readonly metricsValue: MetricsValue,
-    readonly explainabilityMedia: string | null,
+    readonly explainabilityMedia: ExplainabilityMedia,
     readonly scoringSystemsResults: ScoringSystemResult[],
     readonly conclusions: Conclusion[],
     readonly iaSeconds: number
@@ -35,11 +36,7 @@ export default class MediaAnalyzerResponse {
     const mediaValidity = new MediaValidity(isValid, diqaScore, mediaValidityMetrics);
 
     const metrics = new MetricsValue(json.metrics.sensitivity, json.metrics.specificity);
-    const explainabilityMediaContent = json.explainabilityMedia.content;
-    const explainabilityMedia =
-      explainabilityMediaContent === null || explainabilityMediaContent === ''
-        ? null
-        : explainabilityMediaContent;
+    const explainabilityMedia = ExplainabilityMedia.fromJson(json.explainabilityMedia);
 
     const evolution = json.evolution;
     const scoringSystemsResults = evolution?.domains
