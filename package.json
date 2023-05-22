@@ -1,6 +1,6 @@
 {
   "name": "@legit.health/dapi-sdk",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "SDK for integrate with the Dermatology API of Legit.Health",
   "main": "./lib/index.ts",
   "types": "./lib/index.d.ts",
